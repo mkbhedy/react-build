@@ -11,18 +11,20 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22
-          
+
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install
+        working-directory: ./react-build
 
       - name: Build React app
         run: npm run build
+        working-directory: ./react-build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -32,4 +34,4 @@ jobs:
           aws-region: ap-south-1
 
       - name: Deploy to S3
-        run: aws s3 sync ./build s3://react-build-bb --delete
+        run: aws s3 sync ./react-build/build s3://react-build-bb --delete
